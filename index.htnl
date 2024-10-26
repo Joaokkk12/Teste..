@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocos Persistentes</title>
+    <style>
+        .bloco {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #000;
+            cursor: pointer;
+            display: inline-block;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Crie um Bloco</h1>
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="valor" placeholder="Valor">
+    <button onclick="criarBloco()">Criar Bloco</button>
+
+    <div id="blocos"></div>
+
+    <script>
+        // Função para carregar os blocos do localStorage e exibi-los
+        function carregarBlocos() {
+            const blocos = JSON.parse(localStorage.getItem("blocos")) || [];
+            const blocoContainer = document.getElementById("blocos");
+            blocoContainer.innerHTML = ""; // Limpa o conteúdo antes de adicionar novamente
+
+            blocos.forEach((bloco, index) => {
+                const blocoElement = document.createElement("div");
+                blocoElement.classList.add("bloco");
+                blocoElement.textContent = `${bloco.nome} - ${bloco.valor}`;
+                blocoElement.onclick = () => {
+                    window.location.href = `https://exemplo.com/?valor=${bloco.valor}`;
+                };
+                blocoContainer.appendChild(blocoElement);
+            });
+        }
+
+        // Função para criar um novo bloco e salvar no localStorage
+        function criarBloco() {
+            const nome = document.getElementById("nome").value;
+            const valor = document.getElementById("valor").value;
+            if (nome && valor) {
+                const blocos = JSON.parse(localStorage.getItem("blocos")) || [];
+                blocos.push({ nome, valor });
+                localStorage.setItem("blocos", JSON.stringify(blocos));
+                carregarBlocos();
+                document.getElementById("nome").value = ""; // Limpa os campos
+                document.getElementById("valor").value = "";
+            }
+        }
+
+        // Carregar blocos ao iniciar a página
+        carregarBlocos();
+    </script>
+
+</body>
+</html>
